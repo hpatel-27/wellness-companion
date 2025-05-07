@@ -1,9 +1,10 @@
 from django.db import models
+from django.contrib.auth.models import User
 
 
 class Journal(models.Model):
     title = models.CharField(max_length=100)
-    owner = models.CharField(max_length=100, blank=True) # I don't wanna make a User rn
+    owner = models.ForeignKey(User, on_delete=models.CASCADE, related_name="journals")
     date_created = models.DateField(auto_now_add=True)
 
     def __str__(self):
