@@ -65,8 +65,15 @@ class JournalDetailView(APIView):
 
 # List all notes and create a Note within a Journal
 class NoteListCreateView(APIView):
-    def get(self, request):
-        notes = Note.objects.all()
+    def get(self, request, journal_id):
+        try:
+            journal = Journal.objects.get(id=journal_id)
+        except Journal.DoesNotExist:
+            return Response(
+                {"error": "Journal not found."}, status=status.HTTP_404_NOT_FOUND
+            )
+
+        notes = journal.notes.all()  # type: ignore
         serializer = NoteSerializer(notes, many=True)
         return Response(serializer.data)
 
