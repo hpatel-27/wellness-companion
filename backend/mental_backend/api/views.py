@@ -1,6 +1,8 @@
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
+from rest_framework.permissions import IsAuthenticated
+
 from .models import Journal, Note
 from .serializer import JournalSerializer, NoteSerializer
 
@@ -10,6 +12,15 @@ from .serializer import JournalSerializer, NoteSerializer
 
 # Display and create journals
 class JournalListCreateView(APIView):
+    """
+    get:
+        Return a list of all the existing Jou.
+
+    post:
+        Create a new user instance.
+    """
+
+    permission_classes = [IsAuthenticated]
 
     def get(self, request):
         journals = Journal.objects.all()
@@ -27,6 +38,19 @@ class JournalListCreateView(APIView):
 
 # Retrieve, update, and delete specific journal
 class JournalDetailView(APIView):
+    """
+    get:
+        Return a list of all the existing Jou.
+
+    post:
+        Create a new user instance.
+
+    delete:
+        Delete a specific journal.
+    """
+
+    permission_classes = [IsAuthenticated]
+
     def get(self, request, journal_id):
         try:
             journal = Journal.objects.get(id=journal_id)
@@ -65,6 +89,16 @@ class JournalDetailView(APIView):
 
 # List all notes and create a Note within a Journal
 class NoteListCreateView(APIView):
+    """
+    get:
+        Get all the notes from the journal
+
+    post:
+        Create a new note in the journal
+    """
+
+    permission_classes = [IsAuthenticated]
+
     def get(self, request, journal_id):
         try:
             journal = Journal.objects.get(id=journal_id)
@@ -97,6 +131,19 @@ class NoteListCreateView(APIView):
 
 # List, update, and delete specific Note in a Journal
 class NoteDetailView(APIView):
+    """
+    get:
+        Get a specific note from the journal
+
+    put:
+        Update a specific note to the journal
+
+    delete:
+        Delete a specific note in the journal
+    """
+
+    permission_classes = [IsAuthenticated]
+
     def get(self, request, note_id, journal_id):
         try:
             journal: Journal = Journal.objects.get(id=journal_id)
