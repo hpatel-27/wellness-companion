@@ -1,14 +1,14 @@
 from django.urls import path
 from .views import (
     JournalDetailView,
-    JournalListCreateView,
+    JournalCreateView,
     NoteDetailView,
     NoteListCreateView,
 )
 
 urlpatterns = [
     # Journals
-    path("journal/", JournalListCreateView.as_view(), name="journal-list-create"),
+    path("journal/", JournalCreateView.as_view(), name="journal-list-create"),
     path(
         "journal/<int:journal_id>/", JournalDetailView.as_view(), name="journal-detail"
     ),
