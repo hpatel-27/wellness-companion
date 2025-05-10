@@ -25,9 +25,9 @@ class Journal(models.Model):
     date_created = models.DateField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
     # cover_image = models.ImageField(upload_to="journal_covers/", blank=True, null=True)
-    # theme_color = models.CharField(
-    #     max_length=20, blank=True, help_text="Hex code or color name"
-    # )
+    theme_color = models.CharField(
+        max_length=20, blank=True, help_text="Hex code or color name"
+    )
 
     def __str__(self):
         return self.title
