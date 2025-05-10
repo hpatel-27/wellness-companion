@@ -11,10 +11,10 @@ from .serializer import JournalSerializer, NoteSerializer
 
 
 # Display and create journals
-class JournalListCreateView(APIView):
+class JournalCreateView(APIView):
     """
     get:
-        Return a list of all the existing Jou.
+        Return a list of all the existing Journals.
 
     post:
         Create a new user instance.
@@ -22,13 +22,21 @@ class JournalListCreateView(APIView):
 
     permission_classes = [IsAuthenticated]
 
+    # Only for testing
     def get(self, request):
         journals = Journal.objects.all()
         serializer = JournalSerializer(journals, many=True)
         return Response(serializer.data)
 
     def post(self, request):
-        data = request.data
+        # Check if the user already has a journal
+        if Journal.objects.filter(owner=request.user).exists():
+            return Response(
+                {"error": "You already have a journal."},
+                status=status.HTTP_400_BAD_REQUEST,
+            )
+        data = request.data.copy()
+        data["owner"] = request.user.id
         serializer = JournalSerializer(data=data)
         if serializer.is_valid():
             serializer.save()
@@ -40,7 +48,7 @@ class JournalListCreateView(APIView):
 class JournalDetailView(APIView):
     """
     get:
-        Return a list of all the existing Jou.
+        Get a specific journal.
 
     post:
         Create a new user instance.
@@ -53,7 +61,7 @@ class JournalDetailView(APIView):
 
     def get(self, request, journal_id):
         try:
-            journal = Journal.objects.get(id=journal_id)
+            journal = Journal.objects.get(id=journal_id, owner=request.user)
         except Journal.DoesNotExist:
             return Response(
                 {"error": "Journal not found."}, status=status.HTTP_404_NOT_FOUND
