@@ -10,6 +10,15 @@ class NoteSerializer(serializers.ModelSerializer):
 
 class JournalSerializer(serializers.ModelSerializer):
     notes = NoteSerializer(many=True, read_only=True)
+
     class Meta:
         model = Journal
-        fields = ["id", "title", "owner", "date_created", "notes"]
+        fields = [
+            "id",
+            "title",
+            "owner",
+            "date_created",
+            "updated_at",
+            "theme_color",
+            "notes",
+        ]
