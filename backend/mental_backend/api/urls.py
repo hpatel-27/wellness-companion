@@ -1,25 +1,23 @@
 from django.urls import path
 from .views import (
     JournalDetailView,
-    JournalListCreateView,
+    JournalCreateView,
     NoteDetailView,
     NoteListCreateView,
 )
 
 urlpatterns = [
     # Journals
-    path("journals/", JournalListCreateView.as_view(), name="journal-list-create"),
-    path(
-        "journals/<int:journal_id>/", JournalDetailView.as_view(), name="journal-detail"
-    ),
+    path("journal/", JournalCreateView.as_view(), name="journal-list-create"),
+    path("journal/currentUser/", JournalDetailView.as_view(), name="journal-detail"),
     # Notes (nested within a journal)
     path(
-        "journals/<int:journal_id>/notes/",
+        "journal/currentUser/notes/",
         NoteListCreateView.as_view(),
         name="notes-list-create",
     ),
     path(
-        "journals/<int:journal_id>/notes/<int:note_id>/",
+        "journal/currentUser/notes/<int:note_id>/",
         NoteDetailView.as_view(),
         name="note-detail",
     ),
