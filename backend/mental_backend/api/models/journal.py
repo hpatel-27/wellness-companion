@@ -8,6 +8,11 @@ class Journal(models.Model):
     has a title, owner, and the date it was created.
     """
 
+    class Meta:
+        constraints = [
+            models.UniqueConstraint(fields=["owner"], name="unique_journal_per_user")
+        ]
+
     title = models.CharField(max_length=100)
     owner = models.ForeignKey(User, on_delete=models.CASCADE, related_name="journals")
     date_created = models.DateField(auto_now_add=True)
