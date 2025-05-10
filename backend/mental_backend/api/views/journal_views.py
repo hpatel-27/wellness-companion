@@ -59,8 +59,8 @@ class JournalDetailView(APIView):
 
     permission_classes = [IsAuthenticated]
 
-    def get(self, request, journal_id):
-        journal = _get_user_journal_or_404(journal_id, request.user)
+    def get(self, request):
+        journal = _get_user_journal_or_404(request.user)
         if not journal:
             return Response(
                 {"error": "Journal not found."}, status=status.HTTP_404_NOT_FOUND
@@ -68,9 +68,9 @@ class JournalDetailView(APIView):
         serializer = JournalSerializer(journal)
         return Response(serializer.data)
 
-    def put(self, request, journal_id):
+    def put(self, request):
         # Check if the user has a journal
-        journal = _get_user_journal_or_404(journal_id, request.user)
+        journal = _get_user_journal_or_404(request.user)
         if not journal:
             return Response(
                 {"error": "Journal not found."}, status=status.HTTP_404_NOT_FOUND
@@ -83,7 +83,7 @@ class JournalDetailView(APIView):
 
     def delete(self, request):
         # Check if the user has a journal
-        journal = Journal.objects.filter(owner=request.user).first()
+        journal = _get_user_journal_or_404(request.user)
         if not journal:
             return Response(
                 {"error": "Journal not found."}, status=status.HTTP_404_NOT_FOUND
@@ -94,8 +94,8 @@ class JournalDetailView(APIView):
         )
 
 
-def _get_user_journal_or_404(journal_id, user):
-    journal = Journal.objects.filter(id=journal_id, owner=user).first()
+def _get_user_journal_or_404(user):
+    journal = Journal.objects.filter(owner=user).first()
     if not journal:
         return None
     return journal
