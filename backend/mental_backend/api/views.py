@@ -50,8 +50,8 @@ class JournalDetailView(APIView):
     get:
         Get a specific journal.
 
-    post:
-        Create a new user instance.
+    put:
+        Update the journal.
 
     delete:
         Delete a specific journal.
@@ -60,39 +60,38 @@ class JournalDetailView(APIView):
     permission_classes = [IsAuthenticated]
 
     def get(self, request, journal_id):
-        try:
-            journal = Journal.objects.get(id=journal_id, owner=request.user)
-        except Journal.DoesNotExist:
+        journal = _get_user_journal_or_404(journal_id, request.user)
+        if not journal:
             return Response(
                 {"error": "Journal not found."}, status=status.HTTP_404_NOT_FOUND
             )
-
         serializer = JournalSerializer(journal)
         return Response(serializer.data)
 
     def put(self, request, journal_id):
-        try:
-            journal = Journal.objects.get(id=journal_id)
-        except Journal.DoesNotExist:
+        # Check if the user has a journal
+        journal = _get_user_journal_or_404(journal_id, request.user)
+        if not journal:
             return Response(
                 {"error": "Journal not found."}, status=status.HTTP_404_NOT_FOUND
             )
-
-        serializer = JournalSerializer(journal, data=request.data)
+        serializer = JournalSerializer(journal, data=request.data, partial=True)
         if serializer.is_valid():
             serializer.save()
             return Response(serializer.data)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
     def delete(self, request, journal_id):
-        try:
-            journal = Journal.objects.get(id=journal_id)
-            journal.delete()
-            return Response(status=status.HTTP_204_NO_CONTENT)
-        except Journal.DoesNotExist:
+        # Check if the user has a journal
+        journal = _get_user_journal_or_404(journal_id, request.user)
+        if not journal:
             return Response(
                 {"error": "Journal not found."}, status=status.HTTP_404_NOT_FOUND
             )
+        journal.delete()
+        return Response(
+            status=status.HTTP_204_NO_CONTENT,
+        )
 
 
 # List all notes and create a Note within a Journal
@@ -191,3 +190,10 @@ class NoteDetailView(APIView):
                 {"error": "Journal or Note not found."},
                 status=status.HTTP_400_BAD_REQUEST,
             )
+
+
+def _get_user_journal_or_404(journal_id, user):
+    journal = Journal.objects.filter(id=journal_id, owner=user).first()
+    if not journal:
+        return None
+    return journal
