@@ -8,18 +8,18 @@ from .views import (
 
 urlpatterns = [
     # Journals
-    path("journals/", JournalListCreateView.as_view(), name="journal-list-create"),
+    path("journal/", JournalListCreateView.as_view(), name="journal-list-create"),
     path(
-        "journals/<int:journal_id>/", JournalDetailView.as_view(), name="journal-detail"
+        "journal/<int:journal_id>/", JournalDetailView.as_view(), name="journal-detail"
     ),
     # Notes (nested within a journal)
     path(
-        "journals/<int:journal_id>/notes/",
+        "journal/<int:journal_id>/notes/",
         NoteListCreateView.as_view(),
         name="notes-list-create",
     ),
     path(
-        "journals/<int:journal_id>/notes/<int:note_id>/",
+        "journal/<int:journal_id>/notes/<int:note_id>/",
         NoteDetailView.as_view(),
         name="note-detail",
     ),
