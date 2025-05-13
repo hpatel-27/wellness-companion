@@ -9,11 +9,11 @@ import {
 } from "@headlessui/react";
 import { Bars3Icon, XMarkIcon } from "@heroicons/react/24/outline";
 import journalLogo from "../assets/journal-bookmark.svg";
+import profileIcon from "../assets/user.svg";
+
 const navigation = [
   { name: "Dashboard", href: "#", current: true },
-  { name: "Team", href: "#", current: false },
-  { name: "Projects", href: "#", current: false },
-  { name: "Calendar", href: "#", current: false },
+  { name: "Journal", href: "#", current: false },
 ];
 
 function classNames(...classes) {
@@ -47,7 +47,7 @@ const NavBar = () => {
                 src={journalLogo}
                 className="h-8 w-8"
               />
-              <span className="text-white font-semibold text-lg ml-1.5">
+              <span className="text-white font-semibold text-md ml-1.5">
                 Wellness Journal
               </span>
             </div>
@@ -75,14 +75,16 @@ const NavBar = () => {
             {/* Profile dropdown */}
             <Menu as="div" className="relative ml-3">
               <div>
-                <MenuButton className="relative flex rounded-full bg-gray-800 text-sm focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-gray-800 focus:outline-hidden">
+                <MenuButton className="relative flex cursor-pointer rounded-full bg-gray-800 text-sm focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-gray-800 focus:outline-hidden">
                   <span className="absolute -inset-1.5" />
                   <span className="sr-only">Open user menu</span>
-                  <img
-                    alt=""
-                    src={}
-                    className="size-8 rounded-full"
-                  />
+                  <div className="size-8 bg-gray-800 rounded-full">
+                    <img
+                      alt="Default user profile icon"
+                      src={profileIcon}
+                      className="h-full w-full"
+                    />
+                  </div>
                 </MenuButton>
               </div>
               <MenuItems
