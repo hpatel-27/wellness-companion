@@ -1,6 +1,5 @@
 import { useEffect, useState } from "react";
 import { AuthContext } from "../contexts/AuthContext";
-import PropTypes from "prop-types";
 
 const LOGIN_API_URL = import.meta.env.VITE_LOGIN_API_URL;
 // const REGISTER_API_URL = import.meta.env.VITE_REGISTER_API_URL;
@@ -45,8 +44,4 @@ export const AuthProvider = ({ children }) => {
       {children}
     </AuthContext.Provider>
   );
-};
-
-AuthProvider.propTypes = {
-  children: PropTypes.node.isRequired,
 };
