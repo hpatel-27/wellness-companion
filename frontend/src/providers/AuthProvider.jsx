@@ -29,7 +29,7 @@ export const AuthProvider = ({ children }) => {
     });
 
     const data = await response.json();
-    const token = data.access_token;
+    const token = data.access;
 
     if (response.ok) {
       setAuth({ username, token });
