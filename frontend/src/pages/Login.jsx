@@ -28,7 +28,7 @@ const Login = () => {
           <h2 className="mt-10 text-center text-2xl/9 font-bold tracking-tight text-gray-900">
             Sign in to your account
           </h2>
-          {error && <p className="error-message">{error}</p>}
+          {error && <p className="mt-2 text-center text-red-400">{error}</p>}
         </div>
 
         <div className="mt-10 sm:mx-auto sm:w-full sm:max-w-sm">
