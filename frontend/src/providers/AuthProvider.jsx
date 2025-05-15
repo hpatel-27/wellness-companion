@@ -29,10 +29,11 @@ export const AuthProvider = ({ children }) => {
     });
 
     const data = await response.json();
-    const token = data.access;
+    const accessToken = data.access;
+    const refreshToken = data.refresh;
 
     if (response.ok) {
-      setAuth({ username, token });
+      setAuth({ username, accessToken, refreshToken });
       return true;
     } else {
       throw new Error("Invalid credentials.");
@@ -40,7 +41,7 @@ export const AuthProvider = ({ children }) => {
   };
 
   return (
-    <AuthContext.Provider value={{ auth, login }}>
+    <AuthContext.Provider value={{ auth, setAuth, login }}>
       {children}
     </AuthContext.Provider>
   );
