@@ -12,7 +12,7 @@ const Login = () => {
   const handleSubmit = (e) => {
     e.preventDefault();
     login(username, password)
-      .then(() => navigate("/"))
+      .then(() => navigate("/journal"))
       .catch((err) => setError(err.message));
   };
 
