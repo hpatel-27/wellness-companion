@@ -8,12 +8,14 @@ import {
   MenuItems,
 } from "@headlessui/react";
 import { Bars3Icon, XMarkIcon } from "@heroicons/react/24/outline";
+import { useLocation, Link } from "react-router-dom";
 import journalLogo from "../assets/journal-bookmark.svg";
 import profileIcon from "../assets/user.svg";
+import { useEffect, useState } from "react";
 
-const navigation = [
-  { name: "Dashboard", href: "#", current: true },
-  { name: "Journal", href: "#", current: false },
+const baseNavigation = [
+  { name: "Dashboard", href: "/", current: false },
+  { name: "Journal", href: "/journal", current: false },
 ];
 
 function classNames(...classes) {
@@ -21,6 +23,21 @@ function classNames(...classes) {
 }
 
 const NavBar = () => {
+  const location = useLocation();
+
+  const [navigation, setNavigation] = useState([
+    { name: "Dashboard", href: "/", current: true },
+    { name: "Journal", href: "/journal", current: false },
+  ]);
+
+  useEffect(() => {
+    const updatedNav = baseNavigation.map((item) => ({
+      ...item,
+      current: location.pathname === item.href,
+    }));
+    setNavigation(updatedNav);
+  }, [location.pathname]);
+
   return (
     <Disclosure as="nav" className="bg-gray-800">
       <div className="mx-auto max-w-7xl px-2 sm:px-6 lg:px-8">
@@ -54,19 +71,18 @@ const NavBar = () => {
             <div className="hidden sm:ml-6 sm:block">
               <div className="flex space-x-4">
                 {navigation.map((item) => (
-                  <a
+                  <Link
                     key={item.name}
-                    href={item.href}
+                    to={item.href}
                     aria-current={item.current ? "page" : undefined}
-                    className={classNames(
+                    className={
                       item.current
-                        ? "bg-gray-900 text-white"
-                        : "text-gray-300 hover:bg-gray-700 hover:text-white",
-                      "rounded-md px-3 py-2 text-sm font-medium"
-                    )}
+                        ? "bg-gray-900 text-white rounded-md px-3 py-2 text-sm font-medium"
+                        : "text-gray-300 hover:bg-gray-700 hover:text-white rounded-md px-3 py-2 text-sm font-medium"
+                    }
                   >
                     {item.name}
-                  </a>
+                  </Link>
                 ))}
               </div>
             </div>
