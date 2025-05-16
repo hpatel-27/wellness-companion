@@ -18,13 +18,30 @@ const Journal = () => {
     journalService.getJournal(auth, setAuth).then((data) => {
       setJournal(data);
       setNotes(data.notes);
+      // this should be initialized once to separate it from journal.title
+      // any changes to the title in edit, will be updated in the backend
+      // and we have controlled input
+      setEditedTitle(data.title);
     });
-    if (journal?.title) setEditedTitle(journal.title);
-  }, [journal, auth, setAuth]);
+  }, [auth, setAuth]);
 
   // Update the journal with its new title
-  const updateJournalTitle = () => {
-    setIsEditingTitle(false);
+  const updateJournalTitle = async () => {
+    try {
+      // so now update the actual journal title in server
+      const updatedJournal = await journalService.updateJournal(
+        editedTitle,
+        auth,
+        setAuth
+      );
+      setJournal(updatedJournal);
+      setIsEditingTitle(false);
+
+      // need to cause a change to the journal.title to cause rerender
+      // journal.title = editedTitle;
+    } catch (error) {
+      console.error("Failed to update journal: ", error);
+    }
   };
 
   const printJournal = () => {
