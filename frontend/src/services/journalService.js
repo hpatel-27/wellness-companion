@@ -24,7 +24,7 @@ const updateJournal = async (title, auth, setAuth) => {
   const response = await authFetch(
     JOURNAL_URL,
     {
-      method: "GET",
+      method: "PUT",
       headers: {
         "Content-Type": "application/json",
       },
