@@ -1,6 +1,7 @@
 import { useState, useEffect, useContext } from "react";
 import { AuthContext } from "../contexts/AuthContext";
 import journalService from "../services/journalService";
+import Note from "../components/Note";
 
 const Journal = () => {
   // Auth context
@@ -44,23 +45,10 @@ const Journal = () => {
     }
   };
 
+  // Temp function to check the journal data that is received for this user
   const printJournal = () => {
     console.log("Journal for user: ", journal);
     console.log("Notes from the journal: ", notes);
-  };
-
-  // Take the datetime format from django and turn it into
-  // a user-friendly format
-  const formatDate = (isoString) => {
-    const date = new Date(isoString);
-    return date.toLocaleString(undefined, {
-      year: "numeric",
-      month: "short",
-      day: "numeric",
-      hour: "numeric",
-      minute: "2-digit",
-      hour12: true,
-    });
   };
 
   return (
@@ -135,30 +123,13 @@ const Journal = () => {
           <div className="space-y-4">
             {notes?.length > 0 ? (
               notes.map((note) => (
-                <div
+                <Note
                   key={note.id}
-                  className="border border-gray-400 bg-gray-100 rounded-lg p-4 shadow-md hover:bg-gray-200 transition cursor-pointer"
-                  onClick={() => console.log("Open to view the specific note")}
-                >
-                  <h3 className="text-lg font-medium text-gray-800">
-                    {note.title}
-                  </h3>
-                  <p className="text-sm text-gray-800">
-                    Last updated: <span>{formatDate(note.updated_at)}</span>
-                  </p>
-                  <p className="text-sm text-gray-600 mt-2 line-clamp-2">
-                    {note.content}
-                  </p>
-                  <div className="flex justify-end space-x-3">
-                    <p className="bg-blue-400 rounded-2xl text-white p-2 text-xs italic mt-2">
-                      <span className="">Sleep Score: </span>
-                      {note?.sleep_score}
-                    </p>
-                    <p className="bg-blue-400 rounded-2xl text-white p-2 text-xs italic mt-2">
-                      {note?.mood}
-                    </p>
-                  </div>
-                </div>
+                  note={note}
+                  handleClick={(title) =>
+                    console.log("Open to view the note with title: ", title)
+                  }
+                />
               ))
             ) : (
               <p className="text-gray-500 italic">No notes yet.</p>
