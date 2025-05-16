@@ -31,19 +31,6 @@ export const AuthProvider = ({ children }) => {
     }
   };
 
-  // const loginsdfa = async (username, password) => {
-  //   const data = await response.json();
-  //   const accessToken = data.access;
-  //   const refreshToken = data.refresh;
-
-  //   if (response.ok) {
-  //     setAuth({ username, accessToken, refreshToken });
-  //     return true;
-  //   } else {
-  //     throw new Error("Invalid credentials.");
-  //   }
-  // };
-
   return (
     <AuthContext.Provider value={{ auth, setAuth, login }}>
       {children}
