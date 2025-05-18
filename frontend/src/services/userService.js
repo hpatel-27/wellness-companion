@@ -23,6 +23,21 @@ const loginUser = async (username, password) => {
 
 // Take the username and password provided from the user
 // and send it to the backend for user registration
-const registerUser = async (username, password) => {};
+const registerUser = async (username, password) => {
+  // send a POST request to the backend to create the user
+  const response = await fetch(REGISTER_API_URL, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({ username, password }),
+  });
+
+  if (response.ok) {
+    return await response.json();
+  } else {
+    throw new Error("Account creation failed. ");
+  }
+};
 
 export default { loginUser, registerUser };
