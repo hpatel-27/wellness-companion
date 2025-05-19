@@ -1,12 +1,14 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-
+import userService from "../services/userService";
 import journalLogo from "../assets/journal-bookmark.svg";
+
 const Register = () => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [error, setError] = useState("");
+  const navigate = useNavigate();
 
   const doPasswordsMatch = () => {
     console.log("Checking the similarity of both entered passwords");
@@ -18,7 +20,7 @@ const Register = () => {
     return password.length > 8;
   };
 
-  const handleRegister = (e) => {
+  const handleRegister = async (e) => {
     e.preventDefault();
 
     if (!doPasswordsMatch()) {
@@ -26,8 +28,25 @@ const Register = () => {
     } else if (!isPasswordLong()) {
       setError("Password must be greater than 8 characters.");
     } else {
-      // registration logic
-      console.log("Do the registration");
+      // In case the user set off a password error, remove it
+      setError("");
+      try {
+        // this is the response.json(), we already know it is okay
+        const response = await userService.registerUser(username, password);
+        // There is not anything important other than the success message
+        // Just check that it is correct
+        if (response.message === "User created successfully!") {
+          // Still need to login to get a token
+          navigate("/login");
+        } else {
+          // this will send to the catch, or the service method threw an error
+          // which has the same message and serves the same purpose
+          throw new Error("Account creation failed.");
+        }
+      } catch (error) {
+        // Show the error to the user
+        setError(error);
+      }
     }
   };
 
