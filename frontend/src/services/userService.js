@@ -36,7 +36,7 @@ const registerUser = async (username, password) => {
   if (response.ok) {
     return await response.json();
   } else {
-    throw new Error("Account creation failed. ");
+    throw new Error("Account creation failed.");
   }
 };
 
