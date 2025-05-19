@@ -1,8 +1,6 @@
 import { useEffect, useState } from "react";
 import { AuthContext } from "../contexts/AuthContext";
-
-const LOGIN_API_URL = import.meta.env.VITE_LOGIN_API_URL;
-// const REGISTER_API_URL = import.meta.env.VITE_REGISTER_API_URL;
+import userService from "../services/userService";
 
 export const AuthProvider = ({ children }) => {
   const [auth, setAuth] = useState(() => {
@@ -19,24 +17,17 @@ export const AuthProvider = ({ children }) => {
   }, [auth]);
 
   const login = async (username, password) => {
-    // send a POST request to the server
-    const response = await fetch(LOGIN_API_URL, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({ username, password }),
-    });
+    try {
+      // call the service to login a user
+      const response = await userService.loginUser(username, password);
+      // the response is already checked to be okay
+      const accessToken = response.access;
+      const refreshToken = response.refresh;
 
-    const data = await response.json();
-    const accessToken = data.access;
-    const refreshToken = data.refresh;
-
-    if (response.ok) {
       setAuth({ username, accessToken, refreshToken });
       return true;
-    } else {
-      throw new Error("Invalid credentials.");
+    } catch (error) {
+      console.error("Error: ", error);
     }
   };
 
