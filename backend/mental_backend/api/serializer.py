@@ -13,12 +13,4 @@ class JournalSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Journal
-        fields = [
-            "id",
-            "title",
-            "owner",
-            "date_created",
-            "updated_at",
-            "theme_color",
-            "notes",
-        ]
+        fields = "__all__"
