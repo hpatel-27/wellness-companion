@@ -2,6 +2,7 @@ import { useState, useEffect, useContext } from "react";
 import { AuthContext } from "../contexts/AuthContext";
 import journalService from "../services/journalService";
 import Note from "../components/Note";
+import NoteModal from "../components/NoteModal";
 
 const Journal = () => {
   // Auth context
@@ -12,6 +13,8 @@ const Journal = () => {
   // Update title
   const [isEditingTitle, setIsEditingTitle] = useState(false);
   const [editedTitle, setEditedTitle] = useState(journal?.title);
+  // modal pop up control
+  const [showModal, setShowModal] = useState(false);
 
   // Set the journal and notes info on load
   // Also, set the editedTitle with the journal title
@@ -45,10 +48,10 @@ const Journal = () => {
     }
   };
 
-  // Temp function to check the journal data that is received for this user
-  const printJournal = () => {
-    console.log("Journal for user: ", journal);
-    console.log("Notes from the journal: ", notes);
+  // when the modal is submitted for a new note, send a post request
+  // to the backend and then get that note and add it to the current list
+  const handleModalSave = async (title, ) => {
+    //
   };
 
   return (
@@ -101,7 +104,7 @@ const Journal = () => {
 
             <button
               className="h-8 w-8 rounded-lg bg-blue-400 text-white hover:bg-blue-500 transition flex items-center justify-center cursor-pointer"
-              onClick={() => console.log("Button clicked to create note")}
+              onClick={() => setShowModal(true)}
             >
               <svg
                 xmlns="http://www.w3.org/2000/svg"
@@ -136,13 +139,17 @@ const Journal = () => {
             )}
           </div>
         </section>
+
+        {showModal && (
+          <NoteModal
+            onClose={setShowModal(false)}
+            onSave={(newNote) => {
+              setNotes((prev) => [...prev, newNote]);
+              setShowModal(false);
+            }}
+          />
+        )}
       </div>
-      <button
-        className="flex justify-center rounded-md bg-blue-400 px-3 py-1.5 text-sm/6 font-semibold text-white shadow-xs hover:bg-blue-500 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-500 cursor-pointer"
-        onClick={printJournal}
-      >
-        Click me for data
-      </button>
     </div>
   );
 };
