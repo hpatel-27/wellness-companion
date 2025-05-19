@@ -44,11 +44,7 @@ const Login = () => {
                 <p className="mt-2 text-center text-red-400">{error}</p>
               )}
 
-              <form
-                className="space-y-4 md:space-y-6"
-                action="#"
-                onSubmit={handleSubmit}
-              >
+              <form className="space-y-4 md:space-y-6" onSubmit={handleSubmit}>
                 <div>
                   <label
                     htmlFor="username"
