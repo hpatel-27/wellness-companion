@@ -26,13 +26,22 @@ const Note = ({ note, handleClick }) => {
       </p>
       <p className="text-sm text-gray-600 mt-2 line-clamp-2">{note.content}</p>
       <div className="flex justify-end space-x-3">
-        <p className="bg-blue-400 rounded-2xl text-white p-2 text-xs italic mt-2">
-          <span className="">Sleep Score: </span>
-          {note?.sleep_score}
-        </p>
-        <p className="bg-blue-400 rounded-2xl text-white p-2 text-xs italic mt-2">
-          {note?.mood}
-        </p>
+        {note?.sleep_score && (
+          <p className="bg-blue-400 rounded-2xl text-white p-2 text-xs italic mt-2">
+            <span className="">Sleep Score: </span>
+            {note?.sleep_score}
+          </p>
+        )}
+        {note?.mood && (
+          <p className="bg-blue-400 rounded-2xl text-white p-2 text-xs italic mt-2">
+            {note?.mood}
+          </p>
+        )}
+        {note?.tag && (
+          <p className="bg-blue-400 rounded-2xl text-white p-2 text-xs italic mt-2">
+            #{note?.tag}
+          </p>
+        )}
       </div>
     </div>
   );
