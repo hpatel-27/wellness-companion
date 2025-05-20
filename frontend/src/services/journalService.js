@@ -1,5 +1,5 @@
 const JOURNAL_URL = import.meta.env.VITE_JOURNAL_API_URL;
-
+const JOURNAL_2_URL = import.meta.env.VITE_CREATE_JOURNAL_API_URL;
 import { authFetch } from "../util/authFetch";
 
 // Get the journal for the current user
@@ -15,7 +15,7 @@ const getJournal = async (auth, setAuth) => {
   if (response.ok) {
     return await response.json();
   } else {
-    throw new Error("Error fetching journal data.");
+    throw new Error(`Error fetching journal data. ${response.statusText}`);
   }
 };
 
@@ -37,7 +37,7 @@ const updateJournal = async (title, auth, setAuth) => {
   if (response.ok) {
     return await response.json();
   } else {
-    throw new Error("Error updating journal.");
+    throw new Error(`Error updating journal. ${response.statusText}`);
   }
 };
 
