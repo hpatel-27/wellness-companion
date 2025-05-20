@@ -3,6 +3,7 @@ import { AuthContext } from "../contexts/AuthContext";
 import journalService from "../services/journalService";
 import Note from "../components/Note";
 import NoteModal from "../components/NoteModal";
+import noteService from "../services/noteService";
 
 const Journal = () => {
   // Auth context
@@ -34,7 +35,7 @@ const Journal = () => {
     try {
       // so now update the actual journal title in server
       const updatedJournal = await journalService.updateJournal(
-        editedTitle,
+        editedTitle.trim(),
         auth,
         setAuth
       );
@@ -48,10 +49,18 @@ const Journal = () => {
     }
   };
 
-  // when the modal is submitted for a new note, send a post request
+  // when a modal is submitted for a new note, send a post request
   // to the backend and then get that note and add it to the current list
-  const handleModalSave = async () => {
-    //
+  const handleModalSave = async (noteInput) => {
+    try {
+      console.log(noteInput);
+      //
+      // const newNote = noteService.createNote(auth, setAuth, noteInput);
+      // setNotes((prev) => [...prev, newNote]);
+      // close modal here?
+    } catch (error) {
+      console.error("ERROR: ", error);
+    }
   };
 
   return (
