@@ -10,11 +10,42 @@ const NoteModal = ({ onClose, onSave }) => {
   const handleSubmit = (e) => {
     e.preventDefault();
     // if there is no title or input just stop the submission and make them do it again
+    // Though, the form should prevent this from occurring, since they are required
     if (!title || !content) return;
 
-    // dont do any saving yet
+    // Trim any whitespace off the ends of the title
+    setTitle(title.trim());
 
-    onSave();
+    // Note data should at least send the title and content
+    // the other fields are optional
+    const noteData = {
+      title,
+      content,
+    };
+
+    // Only add the optional fields if they are not empty strings
+    if (mood.trim() !== "") {
+      noteData.mood = mood.trim();
+    }
+
+    if (sleepScore.trim() !== "") {
+      // Validate the score as being in range 0-10.0
+      const score = parseFloat(sleepScore.trim());
+      if (score > 0 && score < 10.0) {
+        // Sleep score is tracked as a string, so we should parse it to a float
+        // It should be a number, since its input field is type=number
+        noteData.sleep_score = parseFloat(sleepScore);
+      }
+    }
+
+    if (tag.trim() !== "") {
+      noteData.tag = tag.trim();
+    }
+
+    // Use the save function passed through props to handle the API
+    // request and updates to the notes list
+    onSave(noteData);
+
     // close/hide the modal
     onClose();
   };
@@ -49,82 +80,87 @@ const NoteModal = ({ onClose, onSave }) => {
             <div className="grid gap-4 mb-4 sm:grid-cols-2">
               <div>
                 <label
-                  htmlFor="name"
+                  htmlFor="title"
                   className="block mb-2 text-sm font-medium text-gray-900"
                 >
-                  Name
+                  Title
                 </label>
                 <input
                   type="text"
-                  name="name"
-                  id="name"
+                  name="title"
+                  id="title"
                   className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-600 focus:border-blue-600 block w-full p-2.5"
-                  placeholder="Type product name"
+                  placeholder="Note Title"
                   required
+                  value={title}
+                  onChange={(e) => setTitle(e.target.value)}
                 />
               </div>
               <div>
                 <label
-                  htmlFor="brand"
+                  htmlFor="mood"
                   className="block mb-2 text-sm font-medium text-gray-900"
                 >
-                  Brand
+                  Mood
                 </label>
                 <input
                   type="text"
-                  name="brand"
-                  id="brand"
+                  name="mood"
+                  id="mood"
                   className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-600 focus:border-blue-600 block w-full p-2.5 "
-                  placeholder="Product brand"
-                  required
+                  placeholder="Current Mood (Optional)"
+                  value={mood}
+                  onChange={(e) => setMood(e.target.value)}
                 />
               </div>
               <div>
                 <label
-                  htmlFor="price"
+                  htmlFor="sleep-score"
                   className="block mb-2 text-sm font-medium text-gray-900 "
                 >
-                  Price
+                  Sleep Score
                 </label>
                 <input
                   type="number"
-                  name="price"
-                  id="price"
+                  name="sleep-score"
+                  id="sleep-score"
                   className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-600 focus:border-blue-600 block w-full p-2.5"
-                  placeholder="$2999"
-                  required
+                  placeholder="0-10.0 (Optional)"
+                  value={sleepScore}
+                  onChange={(e) => setSleepScore(e.target.value)}
                 />
               </div>
               <div>
                 <label
-                  htmlFor="category"
+                  htmlFor="tag"
                   className="block mb-2 text-sm font-medium text-gray-900"
                 >
-                  Category
+                  Tag
                 </label>
-                <select
-                  id="category"
-                  defaultValue={"Selected category"}
-                  className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
-                >
-                  <option value="TV">TV/Monitors</option>
-                  <option value="PC">PC</option>
-                  <option value="GA">Gaming/Console</option>
-                  <option value="PH">Phones</option>
-                </select>
+                <input
+                  type="text"
+                  name="tag"
+                  id="tag"
+                  className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-600 focus:border-blue-600 block w-full p-2.5 "
+                  placeholder="E.g. 'May' (Optional)"
+                  value={tag}
+                  onChange={(e) => setTag(e.target.value)}
+                />
               </div>
               <div className="sm:col-span-2">
                 <label
-                  htmlFor="description"
+                  htmlFor="content"
                   className="block mb-2 text-sm font-medium text-gray-900"
                 >
-                  Description
+                  Note Content
                 </label>
                 <textarea
-                  id="description"
+                  id="content"
                   rows="4"
                   className="block p-2.5 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500"
-                  placeholder="Write product description here"
+                  placeholder="What's on your mind?"
+                  value={content}
+                  onChange={(e) => setContent(e.target.value)}
                 ></textarea>
               </div>
             </div>
@@ -144,7 +180,7 @@ const NoteModal = ({ onClose, onSave }) => {
                   clipRule="evenodd"
                 ></path>
               </svg>
-              Add new product
+              Add new note
             </button>
           </form>
         </div>

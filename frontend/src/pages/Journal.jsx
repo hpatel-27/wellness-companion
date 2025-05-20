@@ -41,9 +41,6 @@ const Journal = () => {
       );
       setJournal(updatedJournal);
       setIsEditingTitle(false);
-
-      // need to cause a change to the journal.title to cause rerender
-      // journal.title = editedTitle;
     } catch (error) {
       console.error("Failed to update journal: ", error);
     }
@@ -51,13 +48,10 @@ const Journal = () => {
 
   // when a modal is submitted for a new note, send a post request
   // to the backend and then get that note and add it to the current list
-  const handleModalSave = async (noteInput) => {
+  const handleModalSave = async (noteData) => {
     try {
-      console.log(noteInput);
-      //
-      // const newNote = noteService.createNote(auth, setAuth, noteInput);
-      // setNotes((prev) => [...prev, newNote]);
-      // close modal here?
+      const newNote = await noteService.createNote(auth, setAuth, noteData);
+      setNotes((prev) => [...prev, newNote]);
     } catch (error) {
       console.error("ERROR: ", error);
     }
