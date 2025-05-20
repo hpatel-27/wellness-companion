@@ -12,9 +12,10 @@ const Home = () => {
     });
   }, [auth, setAuth]);
 
-  function printJournal() {
+  const printJournal = () => {
     console.log("Journal for user: ", journal);
-  }
+  };
+
   return (
     <div>
       <div>Home</div>
