@@ -50,7 +50,7 @@ const Journal = () => {
 
   // when the modal is submitted for a new note, send a post request
   // to the backend and then get that note and add it to the current list
-  const handleModalSave = async (title, ) => {
+  const handleModalSave = async () => {
     //
   };
 
@@ -142,11 +142,8 @@ const Journal = () => {
 
         {showModal && (
           <NoteModal
-            onClose={setShowModal(false)}
-            onSave={(newNote) => {
-              setNotes((prev) => [...prev, newNote]);
-              setShowModal(false);
-            }}
+            onClose={() => setShowModal(false)}
+            onSave={handleModalSave}
           />
         )}
       </div>
