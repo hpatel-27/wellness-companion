@@ -62,9 +62,16 @@ class JournalDetailView(APIView):
     def get(self, request):
         journal = _get_user_journal_or_404(request.user)
         if not journal:
-            return Response(
-                {"error": "Journal not found."}, status=status.HTTP_404_NOT_FOUND
-            )
+            # Default Journal data
+            default_data = {
+                "owner": request.user.id,
+                "title": "My Journal",
+            }
+            serializer = JournalSerializer(data=default_data)
+            if serializer.is_valid():
+                serializer.save()
+                return Response(serializer.data, status=status.HTTP_201_CREATED)
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
         serializer = JournalSerializer(journal)
         return Response(serializer.data)
 
