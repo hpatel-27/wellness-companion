@@ -24,10 +24,11 @@ export const AuthProvider = ({ children }) => {
       const accessToken = response.access;
       const refreshToken = response.refresh;
 
-      setAuth({ username, accessToken, refreshToken });
-      return true;
+      // state update is async and we need access to the auth object elsewhere
+      const authObject = { username, accessToken, refreshToken };
+      setAuth(authObject);
     } catch (error) {
-      console.error("Error: ", error);
+      throw new Error("Error: ", error)();
     }
   };
 
