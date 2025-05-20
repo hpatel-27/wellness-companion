@@ -32,7 +32,10 @@ const Register = () => {
       setError("");
       try {
         // this is the response.json(), we already know it is okay
-        const response = await userService.registerUser(username, password);
+        const response = await userService.registerUser(
+          username.trim(),
+          password.trim()
+        );
         // There is not anything important other than the success message
         // Just check that it is correct
         if (response.message === "User created successfully!") {
