@@ -121,11 +121,11 @@ const Journal = () => {
 
   return (
     <div className="min-h-screen bg-gray-100 px-6 py-8">
-      <div className="max-w-4xl mx-auto">
-        <header className="flex justify-between items-center bg-white rounded-2xl p-6 mb-8 text-gray-800">
+      <div className="max-w-4xl mx-auto ">
+        <header className="flex justify-between items-center bg-white border border-gray-200 rounded-2xl shadow-lg p-6 mb-8 text-gray-800">
           {isEditingTitle ? (
             <input
-              className="text-4xl font-semibold bg-gray-100 border border-gray-100 rounded px-2 py-1 w-full max-w-lg"
+              className="text-4xl font-semibold bg-gray-100 border border-gray-100 rounded px-3 py-1.5 w-full max-w-lg"
               value={editedTitle}
               autoFocus
               onChange={(e) => setEditedTitle(e.target.value)}
@@ -157,7 +157,7 @@ const Journal = () => {
             </svg>
           </button>
         </header>
-        <section className="bg-white rounded-2xl shadow-md p-6">
+        <section className="bg-white border border-gray-200 rounded-2xl shadow-lg p-6">
           <div className="flex items-center justify-between mb-6">
             <div>
               <h2 className="text-2xl font-medium text-gray-700">All Notes</h2>
