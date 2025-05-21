@@ -1,6 +1,6 @@
 // Take the datetime format from django and turn it into
 // a user-friendly format
-const formatDate = (isoString) => {
+export const formatDate = (isoString) => {
   const date = new Date(isoString);
   return date.toLocaleString(undefined, {
     year: "numeric",
@@ -11,5 +11,3 @@ const formatDate = (isoString) => {
     hour12: true,
   });
 };
-
-export default { formatDate };

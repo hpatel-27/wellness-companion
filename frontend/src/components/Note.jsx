@@ -1,4 +1,4 @@
-import formatDate from "../util/formatDate";
+import { formatDate } from "../util/formatDate";
 
 const Note = ({ note, handleClick }) => {
   return (
