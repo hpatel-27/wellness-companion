@@ -38,6 +38,17 @@ const NavBar = () => {
     setNavigation(updatedNav);
   }, [location.pathname]);
 
+  // the backend doesn't keep track of whether someone is logged in or not
+  // The token that the user has on the frontend is what allows them to be
+  // considered "logged in", so once that is gone, they cannot make requests
+  // and cannot get a new access or refresh token.
+  const handleLogout = () => {
+    // Removing the auth will update the auth state,
+    // causing a reload of the page, which will indicate
+    // the user does not have authentication privileges anymore
+    localStorage.removeItem("auth");
+  };
+
   return (
     <Disclosure as="nav" className="bg-gray-800">
       <div className="mx-auto max-w-7xl px-2 sm:px-6 lg:px-8">
@@ -109,7 +120,7 @@ const NavBar = () => {
               >
                 <MenuItem>
                   <a
-                    href="#"
+                    href="/profile"
                     className="block px-4 py-2 text-sm text-gray-700 data-focus:bg-gray-100 data-focus:outline-hidden"
                   >
                     Your Profile
@@ -117,15 +128,8 @@ const NavBar = () => {
                 </MenuItem>
                 <MenuItem>
                   <a
-                    href="#"
-                    className="block px-4 py-2 text-sm text-gray-700 data-focus:bg-gray-100 data-focus:outline-hidden"
-                  >
-                    Settings
-                  </a>
-                </MenuItem>
-                <MenuItem>
-                  <a
-                    href="#"
+                    href="/login"
+                    onClick={handleLogout}
                     className="block px-4 py-2 text-sm text-gray-700 data-focus:bg-gray-100 data-focus:outline-hidden"
                   >
                     Sign out
