@@ -1,11 +1,11 @@
 import { useState } from "react";
 
-const NoteModal = ({ onClose, onSave }) => {
-  const [title, setTitle] = useState("");
-  const [content, setContent] = useState("");
-  const [mood, setMood] = useState("");
-  const [sleepScore, setSleepScore] = useState("");
-  const [tag, setTag] = useState("");
+const NoteModal = ({ onClose, onSave, onDelete, existingNote = null }) => {
+  const [title, setTitle] = useState(existingNote?.title || "");
+  const [content, setContent] = useState(existingNote?.content || "");
+  const [mood, setMood] = useState(existingNote?.mood || "");
+  const [sleepScore, setSleepScore] = useState(existingNote?.sleep_score || "");
+  const [tag, setTag] = useState(existingNote?.tag || "");
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -55,7 +55,9 @@ const NoteModal = ({ onClose, onSave }) => {
       <div className="relative p-4 w-full max-w-2xl h-full md:h-auto">
         <div className="relative p-4 bg-white rounded-2xl shadow-2xl sm:p-5">
           <div className="flex justify-between items-center pb-4 mb-4 rounded-t border-b sm:mb-5">
-            <h3 className="text-lg font-semibold text-gray-900">Add Note</h3>
+            <h3 className="text-lg font-semibold text-gray-900">
+              {existingNote ? "Edit Note" : "Add Note"}
+            </h3>
             <button
               type="button"
               className="text-gray-400 bg-transparent transition hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm p-1.5 ml-auto inline-flex items-center cursor-pointer"
@@ -180,7 +182,7 @@ const NoteModal = ({ onClose, onSave }) => {
                   clipRule="evenodd"
                 ></path>
               </svg>
-              Add new note
+              {existingNote ? "Update Note" : "Create Note"}
             </button>
           </form>
         </div>
