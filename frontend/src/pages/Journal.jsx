@@ -17,6 +17,9 @@ const Journal = () => {
   // modal pop up control
   const [showModal, setShowModal] = useState(false);
 
+  // the selected note that has been clicked on by the user
+  const [selectedNote, setSelectedNote] = useState(null);
+
   // Set the journal and notes info on load
   // Also, set the editedTitle with the journal title
   useEffect(() => {
@@ -52,10 +55,28 @@ const Journal = () => {
     try {
       const newNote = await noteService.createNote(auth, setAuth, noteData);
       setNotes((prev) => [...prev, newNote]);
+
+      // On modal close, this should already be set to false
+      // but it doesn't hurt to set it again.
+      setShowModal(false);
+
+      // After the note is saved after updating, there should not be
+      // a selected note.
+      setSelectedNote(false);
     } catch (error) {
       console.error("ERROR: ", error);
     }
   };
+
+  const printJournal = () => {
+    console.log(journal);
+    console.log(notes);
+  };
+
+  // When the button on the NoteModal is clicked to delete a Note,
+  // this function runs. It makes a request to delete the existing
+  // note, and needs the noteId.
+  const handleNoteDelete = () => {};
 
   return (
     <div className="min-h-screen bg-gray-100 px-6 py-8">
@@ -95,7 +116,6 @@ const Journal = () => {
             </svg>
           </button>
         </header>
-
         <section className="bg-white rounded-2xl shadow-md p-6">
           <div className="flex items-center justify-between mb-6">
             <div>
@@ -132,9 +152,11 @@ const Journal = () => {
                 <Note
                   key={note.id}
                   note={note}
-                  handleClick={(title) =>
-                    console.log("Open to view the note with title: ", title)
-                  }
+                  handleClick={() => {
+                    setSelectedNote(note);
+                    setShowModal(true);
+                    console.log(note);
+                  }}
                 />
               ))
             ) : (
@@ -145,10 +167,22 @@ const Journal = () => {
 
         {showModal && (
           <NoteModal
-            onClose={() => setShowModal(false)}
+            onClose={() => {
+              setShowModal(false);
+              setSelectedNote(false);
+            }}
             onSave={handleModalSave}
+            onDelete={handleNoteDelete}
+            existingNote={selectedNote}
           />
         )}
+
+        <button
+          className="flex justify-center rounded-md bg-blue-400 px-3 py-1.5 text-sm/6 font-semibold text-white shadow-xs hover:bg-blue-500 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-500 cursor-pointer"
+          onClick={printJournal}
+        >
+          Click me for testing info
+        </button>
       </div>
     </div>
   );
