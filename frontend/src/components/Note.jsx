@@ -1,5 +1,3 @@
-import { useState } from "react";
-
 // Take the datetime format from django and turn it into
 // a user-friendly format
 const formatDate = (isoString) => {
