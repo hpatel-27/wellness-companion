@@ -64,6 +64,7 @@ const Journal = () => {
   const handleModalSave = async (noteData) => {
     try {
       if (selectedNote) {
+        // Update the note with the data and id and properly sort it
         const updatedNote = await noteService.updateNote(
           auth,
           setAuth,
@@ -78,6 +79,7 @@ const Journal = () => {
           return sortNotes(updated);
         });
       } else {
+        // Create a note with the given data and sort by most recently updated
         const newNote = await noteService.createNote(auth, setAuth, noteData);
         setNotes((prevNotes) => sortNotes([...prevNotes, newNote]));
       }
@@ -97,7 +99,25 @@ const Journal = () => {
   // When the button on the NoteModal is clicked to delete a Note,
   // this function runs. It makes a request to delete the existing
   // note, and needs the noteId.
-  const handleNoteDelete = () => {};
+  const handleNoteDelete = async (noteId) => {
+    try {
+      // A successful deletion will be a 204 and return nothing. A non-200 response
+      // will throw an error that gets caught.
+      await noteService.deleteNote(auth, setAuth, noteId);
+      // Remove the note with the id we deleted
+      setNotes((prevNotes) => prevNotes.filter((note) => note.id !== noteId));
+    } catch (error) {
+      console.error("Failed to delete note: ", error);
+    }
+
+    // On modal close, this should already be set to false
+    // but it doesn't hurt to set it again.
+    setShowModal(false);
+
+    // After the note is saved after updating, there should not be
+    // a selected note.
+    setSelectedNote(false);
+  };
 
   return (
     <div className="min-h-screen bg-gray-100 px-6 py-8">
