@@ -94,11 +94,6 @@ const Journal = () => {
     }
   };
 
-  const printJournal = () => {
-    console.log(journal);
-    console.log(notes);
-  };
-
   // When the button on the NoteModal is clicked to delete a Note,
   // this function runs. It makes a request to delete the existing
   // note, and needs the noteId.
@@ -181,7 +176,6 @@ const Journal = () => {
                   handleClick={() => {
                     setSelectedNote(note);
                     setShowModal(true);
-                    console.log(note);
                   }}
                 />
               ))
@@ -202,13 +196,6 @@ const Journal = () => {
             existingNote={selectedNote}
           />
         )}
-
-        <button
-          className="flex justify-center rounded-md bg-blue-400 px-3 py-1.5 text-sm/6 font-semibold text-white shadow-xs hover:bg-blue-500 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-500 cursor-pointer"
-          onClick={printJournal}
-        >
-          Click me for testing info
-        </button>
       </div>
     </div>
   );
