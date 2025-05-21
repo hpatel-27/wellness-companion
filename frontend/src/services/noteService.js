@@ -54,4 +54,25 @@ const updateNote = async (auth, setAuth, updatedNote, noteId) => {
   }
 };
 
-export default { getAllNotes, createNote, updateNote };
+// Deletes a note from the journal given the note's id
+const deleteNote = async (auth, setAuth, noteId) => {
+  const response = await authFetch(
+    `${NOTES_URL}${noteId}/`,
+    {
+      method: "DELETE",
+      headers: {
+        "Content-Type": "application/json",
+      },
+    },
+    auth,
+    setAuth
+  );
+
+  if (response.ok) {
+    return response;
+  } else {
+    throw new Error(`Error deleting note: ${response.statusText}`);
+  }
+};
+
+export default { getAllNotes, createNote, updateNote, deleteNote };
