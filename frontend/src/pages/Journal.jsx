@@ -121,7 +121,7 @@ const Journal = () => {
 
   return (
     <div className="min-h-screen bg-gray-100 px-6 py-8">
-      <div className="max-w-4xl mx-auto ">
+      <div className="max-w-4xl mx-auto pt-15">
         <header className="flex justify-between items-center bg-white border border-gray-200 rounded-2xl shadow-md p-6 mb-8 text-gray-800">
           {isEditingTitle ? (
             <input
