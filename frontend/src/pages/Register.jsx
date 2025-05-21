@@ -32,7 +32,10 @@ const Register = () => {
       setError("");
       try {
         // this is the response.json(), we already know it is okay
-        const response = await userService.registerUser(username, password);
+        const response = await userService.registerUser(
+          username.trim(),
+          password.trim()
+        );
         // There is not anything important other than the success message
         // Just check that it is correct
         if (response.message === "User created successfully!") {
@@ -66,11 +69,7 @@ const Register = () => {
               Create an account
             </h1>
             {error && <p className="mt-2 text-center text-red-400">{error}</p>}
-            <form
-              className="space-y-4 md:space-y-6"
-              action="#"
-              onSubmit={handleRegister}
-            >
+            <form className="space-y-4 md:space-y-6" onSubmit={handleRegister}>
               <div>
                 <label
                   htmlFor="username"

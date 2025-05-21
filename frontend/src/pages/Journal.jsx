@@ -2,6 +2,8 @@ import { useState, useEffect, useContext } from "react";
 import { AuthContext } from "../contexts/AuthContext";
 import journalService from "../services/journalService";
 import Note from "../components/Note";
+import NoteModal from "../components/NoteModal";
+import noteService from "../services/noteService";
 
 const Journal = () => {
   // Auth context
@@ -12,13 +14,28 @@ const Journal = () => {
   // Update title
   const [isEditingTitle, setIsEditingTitle] = useState(false);
   const [editedTitle, setEditedTitle] = useState(journal?.title);
+  // modal pop up control
+  const [showModal, setShowModal] = useState(false);
+
+  // the selected note that has been clicked on by the user
+  const [selectedNote, setSelectedNote] = useState(null);
+
+  // Sort the list of notes based on when they were last updated
+  const sortNotes = (notes) => {
+    const sorted = notes.sort((a, b) => {
+      return new Date(b.updated_at) - new Date(a.updated_at);
+    });
+    return sorted;
+  };
 
   // Set the journal and notes info on load
   // Also, set the editedTitle with the journal title
   useEffect(() => {
     journalService.getJournal(auth, setAuth).then((data) => {
       setJournal(data);
-      setNotes(data.notes);
+
+      const sortedNotes = sortNotes(data.notes);
+      setNotes(sortedNotes);
       // this should be initialized once to separate it from journal.title
       // any changes to the title in edit, will be updated in the backend
       // and we have controlled input
@@ -31,33 +48,84 @@ const Journal = () => {
     try {
       // so now update the actual journal title in server
       const updatedJournal = await journalService.updateJournal(
-        editedTitle,
+        editedTitle.trim(),
         auth,
         setAuth
       );
       setJournal(updatedJournal);
       setIsEditingTitle(false);
-
-      // need to cause a change to the journal.title to cause rerender
-      // journal.title = editedTitle;
     } catch (error) {
       console.error("Failed to update journal: ", error);
     }
   };
 
-  // Temp function to check the journal data that is received for this user
-  const printJournal = () => {
-    console.log("Journal for user: ", journal);
-    console.log("Notes from the journal: ", notes);
+  // when a modal is submitted for a new note, send a post request
+  // to the backend and then get that note and add it to the current list
+  const handleModalSave = async (noteData) => {
+    try {
+      if (selectedNote) {
+        // Update the note with the data and id and properly sort it
+        const updatedNote = await noteService.updateNote(
+          auth,
+          setAuth,
+          noteData,
+          selectedNote.id
+        );
+        setNotes((prev) => {
+          const updated = prev.map((note) =>
+            note.id === updatedNote.id ? updatedNote : note
+          );
+
+          return sortNotes(updated);
+        });
+      } else {
+        // Create a note with the given data and sort by most recently updated
+        const newNote = await noteService.createNote(auth, setAuth, noteData);
+        setNotes((prevNotes) => sortNotes([...prevNotes, newNote]));
+      }
+
+      // On modal close, this should already be set to false
+      // but it doesn't hurt to set it again.
+      setShowModal(false);
+
+      // After the note is saved after updating, there should not be
+      // a selected note.
+      setSelectedNote(false);
+    } catch (error) {
+      console.error("ERROR: ", error);
+    }
+  };
+
+  // When the button on the NoteModal is clicked to delete a Note,
+  // this function runs. It makes a request to delete the existing
+  // note, and needs the noteId.
+  const handleNoteDelete = async (noteId) => {
+    try {
+      // A successful deletion will be a 204 and return nothing. A non-200 response
+      // will throw an error that gets caught.
+      await noteService.deleteNote(auth, setAuth, noteId);
+      // Remove the note with the id we deleted
+      setNotes((prevNotes) => prevNotes.filter((note) => note.id !== noteId));
+    } catch (error) {
+      console.error("Failed to delete note: ", error);
+    }
+
+    // On modal close, this should already be set to false
+    // but it doesn't hurt to set it again.
+    setShowModal(false);
+
+    // After the note is saved after updating, there should not be
+    // a selected note.
+    setSelectedNote(false);
   };
 
   return (
     <div className="min-h-screen bg-gray-100 px-6 py-8">
-      <div className="max-w-4xl mx-auto">
-        <header className="flex justify-between items-center bg-white rounded-2xl p-6 mb-8 text-gray-800">
+      <div className="max-w-4xl mx-auto ">
+        <header className="flex justify-between items-center bg-white border border-gray-200 rounded-2xl shadow-lg p-6 mb-8 text-gray-800">
           {isEditingTitle ? (
             <input
-              className="text-4xl font-semibold bg-gray-100 border border-gray-200 rounded px-2 py-1 w-full max-w-lg"
+              className="text-4xl font-semibold bg-gray-100 border border-gray-100 rounded px-3 py-1.5 w-full max-w-lg"
               value={editedTitle}
               autoFocus
               onChange={(e) => setEditedTitle(e.target.value)}
@@ -89,8 +157,7 @@ const Journal = () => {
             </svg>
           </button>
         </header>
-
-        <section className="bg-white rounded-2xl shadow-md p-6">
+        <section className="bg-white border border-gray-200 rounded-2xl shadow-lg p-6">
           <div className="flex items-center justify-between mb-6">
             <div>
               <h2 className="text-2xl font-medium text-gray-700">All Notes</h2>
@@ -101,7 +168,7 @@ const Journal = () => {
 
             <button
               className="h-8 w-8 rounded-lg bg-blue-400 text-white hover:bg-blue-500 transition flex items-center justify-center cursor-pointer"
-              onClick={() => console.log("Button clicked to create note")}
+              onClick={() => setShowModal(true)}
             >
               <svg
                 xmlns="http://www.w3.org/2000/svg"
@@ -126,9 +193,10 @@ const Journal = () => {
                 <Note
                   key={note.id}
                   note={note}
-                  handleClick={(title) =>
-                    console.log("Open to view the note with title: ", title)
-                  }
+                  handleClick={() => {
+                    setSelectedNote(note);
+                    setShowModal(true);
+                  }}
                 />
               ))
             ) : (
@@ -136,13 +204,19 @@ const Journal = () => {
             )}
           </div>
         </section>
+
+        {showModal && (
+          <NoteModal
+            onClose={() => {
+              setShowModal(false);
+              setSelectedNote(false);
+            }}
+            onSave={handleModalSave}
+            onDelete={handleNoteDelete}
+            existingNote={selectedNote}
+          />
+        )}
       </div>
-      <button
-        className="flex justify-center rounded-md bg-blue-400 px-3 py-1.5 text-sm/6 font-semibold text-white shadow-xs hover:bg-blue-500 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-500 cursor-pointer"
-        onClick={printJournal}
-      >
-        Click me for data
-      </button>
     </div>
   );
 };
