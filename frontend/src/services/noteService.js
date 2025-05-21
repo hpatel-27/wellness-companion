@@ -1,7 +1,6 @@
 import { authFetch } from "../util/authFetch";
 
 const NOTES_URL = import.meta.env.VITE_NOTES_API_URL;
-const NOTE_URL = import.meta.env.VITE_SINGLE_NOTE_API_URL;
 
 const getAllNotes = async (auth, setAuth) => {
   const response = await authFetch(NOTES_URL, { method: "GET" }, auth, setAuth);
@@ -34,9 +33,9 @@ const createNote = async (auth, setAuth, noteData) => {
   }
 };
 
-const updateNote = async (auth, setAuth, updatedNote) => {
+const updateNote = async (auth, setAuth, updatedNote, noteId) => {
   const response = await authFetch(
-    NOTE_URL,
+    `${NOTES_URL}${noteId}/`,
     {
       method: "PUT",
       headers: {
