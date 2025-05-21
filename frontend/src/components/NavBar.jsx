@@ -58,7 +58,7 @@ const NavBar = () => {
             </DisclosureButton>
           </div>
           <div className="flex flex-1 items-left justify-center sm:items-stretch sm:justify-start">
-            <div className="flex shrink-0 items-center">
+            <a href="/" className="flex shrink-0 items-center">
               <img
                 alt="Mental Wellness Journal Logo"
                 src={journalLogo}
@@ -67,7 +67,7 @@ const NavBar = () => {
               <span className="text-white font-semibold text-md ml-1.5">
                 Wellness Journal
               </span>
-            </div>
+            </a>
             <div className="hidden sm:ml-6 sm:block">
               <div className="flex space-x-4">
                 {navigation.map((item) => (
