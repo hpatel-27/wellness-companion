@@ -53,8 +53,20 @@ const Journal = () => {
   // to the backend and then get that note and add it to the current list
   const handleModalSave = async (noteData) => {
     try {
-      const newNote = await noteService.createNote(auth, setAuth, noteData);
-      setNotes((prev) => [...prev, newNote]);
+      if (selectedNote) {
+        console.log(noteData);
+        const updatedNote = await noteService.updateNote(
+          auth,
+          setAuth,
+          noteData,
+          selectedNote.id
+        );
+        console.log(updatedNote);
+      } else {
+        const newNote = await noteService.createNote(auth, setAuth, noteData);
+        console.log(newNote);
+        setNotes((prev) => [...prev, newNote]);
+      }
 
       // On modal close, this should already be set to false
       // but it doesn't hurt to set it again.
