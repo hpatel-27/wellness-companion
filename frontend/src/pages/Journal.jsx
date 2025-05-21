@@ -20,12 +20,22 @@ const Journal = () => {
   // the selected note that has been clicked on by the user
   const [selectedNote, setSelectedNote] = useState(null);
 
+  // Sort the list of notes based on when they were last updated
+  const sortNotes = (notes) => {
+    const sorted = notes.sort((a, b) => {
+      return new Date(b.updated_at) - new Date(a.updated_at);
+    });
+    return sorted;
+  };
+
   // Set the journal and notes info on load
   // Also, set the editedTitle with the journal title
   useEffect(() => {
     journalService.getJournal(auth, setAuth).then((data) => {
       setJournal(data);
-      setNotes(data.notes);
+
+      const sortedNotes = sortNotes(data.notes);
+      setNotes(sortedNotes);
       // this should be initialized once to separate it from journal.title
       // any changes to the title in edit, will be updated in the backend
       // and we have controlled input
@@ -54,18 +64,22 @@ const Journal = () => {
   const handleModalSave = async (noteData) => {
     try {
       if (selectedNote) {
-        console.log(noteData);
         const updatedNote = await noteService.updateNote(
           auth,
           setAuth,
           noteData,
           selectedNote.id
         );
-        console.log(updatedNote);
+        setNotes((prev) => {
+          const updated = prev.map((note) =>
+            note.id === updatedNote.id ? updatedNote : note
+          );
+
+          return sortNotes(updated);
+        });
       } else {
         const newNote = await noteService.createNote(auth, setAuth, noteData);
-        console.log(newNote);
-        setNotes((prev) => [...prev, newNote]);
+        setNotes((prevNotes) => sortNotes([...prevNotes, newNote]));
       }
 
       // On modal close, this should already be set to false
@@ -96,7 +110,7 @@ const Journal = () => {
         <header className="flex justify-between items-center bg-white rounded-2xl p-6 mb-8 text-gray-800">
           {isEditingTitle ? (
             <input
-              className="text-4xl font-semibold bg-gray-100 border border-gray-200 rounded px-2 py-1 w-full max-w-lg"
+              className="text-4xl font-semibold bg-gray-100 border border-gray-100 rounded px-2 py-1 w-full max-w-lg"
               value={editedTitle}
               autoFocus
               onChange={(e) => setEditedTitle(e.target.value)}
