@@ -10,7 +10,4 @@ class UserView(APIView):
 
     def get(self, request):
         serializer = UserSerializer(request.user)
-        if serializer.is_valid():
-            return Response(serializer.data)
-        else:
-            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        return Response(serializer.data)
