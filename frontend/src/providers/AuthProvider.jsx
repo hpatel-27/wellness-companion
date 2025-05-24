@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { AuthContext } from "../contexts/AuthContext";
-import userService from "../services/userService";
+import authService from "../services/authService";
 
 export const AuthProvider = ({ children }) => {
   const [auth, setAuth] = useState(() => {
@@ -19,7 +19,7 @@ export const AuthProvider = ({ children }) => {
   const login = async (username, password) => {
     try {
       // call the service to login a user
-      const response = await userService.loginUser(username, password);
+      const response = await authService.loginUser(username, password);
       // the response is already checked to be okay
       const accessToken = response.access;
       const refreshToken = response.refresh;
