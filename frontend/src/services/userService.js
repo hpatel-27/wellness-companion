@@ -1,43 +1,46 @@
-const REGISTER_API_URL = import.meta.env.VITE_REGISTER_API_URL;
-const LOGIN_API_URL = import.meta.env.VITE_LOGIN_API_URL;
+import { authFetch } from "../util/authFetch";
+const USER_PROFILE_URL = import.meta.env.VITE_USER_PROFILE_URL;
 
-// Use the username and password provided from the user's
-// input and return the data that is necessary for
-// successful token extraction
-const loginUser = async (username, password) => {
-  // send a POST request to the server
-  const response = await fetch(LOGIN_API_URL, {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
+const getUserProfile = async (auth, setAuth) => {
+  const response = await authFetch(
+    USER_PROFILE_URL,
+    {
+      method: "GET",
     },
-    body: JSON.stringify({ username, password }),
-  });
+    auth,
+    setAuth
+  );
 
   if (response.ok) {
     return await response.json();
   } else {
-    throw new Error("Invalid credentials.");
+    throw new Error(
+      `Error fetching user profile information: ${response.statusText}`
+    );
   }
 };
 
-// Take the username and password provided from the user
-// and send it to the backend for user registration
-const registerUser = async (username, password) => {
-  // send a POST request to the backend to create the user
-  const response = await fetch(REGISTER_API_URL, {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
+const updateUserProfile = async (auth, setAuth, profileData) => {
+  const response = await authFetch(
+    USER_PROFILE_URL,
+    {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(profileData),
     },
-    body: JSON.stringify({ username, password }),
-  });
+    auth,
+    setAuth
+  );
 
   if (response.ok) {
     return await response.json();
   } else {
-    throw new Error("Account creation failed.");
+    throw new Error(
+      `Error updating the user's profile: ${response.statusText}`
+    );
   }
 };
 
-export default { loginUser, registerUser };
+export default { getUserProfile, updateUserProfile };

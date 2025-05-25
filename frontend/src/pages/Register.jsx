@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import userService from "../services/userService";
+import authService from "../services/authService";
 import journalLogo from "../assets/journal-bookmark.svg";
 
 const Register = () => {
@@ -32,7 +32,7 @@ const Register = () => {
       setError("");
       try {
         // this is the response.json(), we already know it is okay
-        const response = await userService.registerUser(
+        const response = await authService.registerUser(
           username.trim(),
           password.trim()
         );

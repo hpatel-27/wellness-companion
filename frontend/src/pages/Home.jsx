@@ -17,8 +17,8 @@ const Home = () => {
   };
 
   return (
-    <div>
-      <div>Home</div>
+    <div className="min-h-screen">
+      <div className="pt-15">Home</div>
       <button
         className="flex justify-center rounded-md bg-blue-400 px-3 py-1.5 text-sm/6 font-semibold text-white shadow-xs hover:bg-blue-500 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-500 cursor-pointer"
         onClick={printJournal}
