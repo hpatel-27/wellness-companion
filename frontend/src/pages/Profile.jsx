@@ -2,14 +2,12 @@ import { useContext, useEffect, useState } from "react";
 import userService from "../services/userService";
 import { AuthContext } from "../contexts/AuthContext";
 import { formatDate } from "../util/formatDate";
-import ProfileModal from "../components/ProfileModal";
 
 const Profile = () => {
   // Auth Context
   const { auth, setAuth } = useContext(AuthContext);
 
   // Profile variables
-  const [user, setUser] = useState(null);
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
   const [username, setUsername] = useState("");
@@ -58,10 +56,10 @@ const Profile = () => {
     // close the modal
     setShowModal(false);
   };
+
   useEffect(() => {
     userService.getUserProfile(auth, setAuth).then((data) => {
       console.log(data);
-      setUser(data);
       setFirstName(data.first_name || "");
       setLastName(data.last_name || "");
       setUsername(data.username || "");
@@ -211,6 +209,41 @@ const Profile = () => {
                   <div className="grid gap-4 mb-4 sm:grid-cols-2">
                     <div>
                       <label
+                        htmlFor="username"
+                        className="block mb-2 text-sm font-medium text-gray-900"
+                      >
+                        Username
+                      </label>
+                      <input
+                        type="text"
+                        id="username"
+                        name="username"
+                        className="bg-gray-200 border border-gray-300 text-gray-500 text-sm rounded-lg focus:ring-blue-600 focus:border-blue-600 block w-full p-2.5"
+                        value={username || ""}
+                        disabled
+                      />
+                    </div>
+
+                    <div>
+                      <label
+                        htmlFor="updated-email"
+                        className="block mb-2 text-sm font-medium text-gray-900"
+                      >
+                        Email
+                      </label>
+                      <input
+                        type="text"
+                        id="updated-email"
+                        name="updated-email"
+                        className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-600 focus:border-blue-600 block w-full p-2.5"
+                        value={updatedEmail || ""}
+                        onChange={(e) => setUpdatedEmail(e.target.value)}
+                        placeholder="example@email.com"
+                      />
+                    </div>
+
+                    <div>
+                      <label
                         htmlFor="updated-first-name"
                         className="block mb-2 text-sm font-medium text-gray-900"
                       >
@@ -242,24 +275,6 @@ const Profile = () => {
                         value={updatedLastName || ""}
                         onChange={(e) => setUpdatedLastName(e.target.value)}
                         placeholder="Doe"
-                      />
-                    </div>
-
-                    <div>
-                      <label
-                        htmlFor="updated-email"
-                        className="block mb-2 text-sm font-medium text-gray-900"
-                      >
-                        Email
-                      </label>
-                      <input
-                        type="text"
-                        id="updated-email"
-                        name="updated-email"
-                        className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-600 focus:border-blue-600 block w-full p-2.5"
-                        value={updatedEmail || ""}
-                        onChange={(e) => setUpdatedEmail(e.target.value)}
-                        placeholder="example@email.com"
                       />
                     </div>
                   </div>
