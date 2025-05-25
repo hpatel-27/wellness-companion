@@ -21,9 +21,12 @@ const Profile = () => {
   const [updatedFirstName, setUpdatedFirstName] = useState("");
   const [updatedLastName, setUpdatedLastName] = useState("");
 
-  const handleEdit = () => {
-    console.log("Clicked edit button");
+  // For the error popup when a profile update fails
+  const [error, setError] = useState("");
 
+  // Handles when the edit profile button is clicked.
+  // This makes the modal pop up.
+  const handleEdit = () => {
     // Since we are editing set the values of the updated(...) state variables
     // to their saved values
     setUpdatedEmail(email);
@@ -34,20 +37,61 @@ const Profile = () => {
     setShowModal(true);
   };
 
-  const handleUpdate = (e) => {
+  // When the modal form is submitted, you end up here.
+  // We
+  const handleUpdate = async (e) => {
     e.preventDefault();
-    console.log("Form submitted");
+
+    // Check if there is even any of the fields being updated,
+    // if not just close the modal and stop there
+    if (!updatedEmail && !updatedFirstName && !updatedLastName) {
+      setShowModal(false);
+      return;
+    }
+
+    // If there is at least one to update
+    const profileData = {};
+
+    if (updatedFirstName && updatedFirstName.trim() !== "") {
+      profileData.first_name = updatedFirstName.trim();
+    }
+    if (updatedLastName && updatedLastName.trim() !== "") {
+      profileData.last_name = updatedLastName.trim();
+    }
+    if (updatedEmail && updatedEmail.trim() !== "") {
+      profileData.email = updatedEmail.trim();
+    }
+
+    // profileDate has the update data cleaned up
+    try {
+      // If this is a bad response it should error and send to the catch
+      const updatedProfile = await userService.updateUserProfile(
+        auth,
+        setAuth,
+        profileData
+      );
+
+      setFirstName(updatedProfile.first_name);
+      setLastName(updatedProfile.last_name);
+      setEmail(updatedProfile.email);
+
+      setError("");
+    } catch (error) {
+      // Could have a pop up at the top of the screen that it failed to update
+      setError(error);
+    }
+    // Make the request with the data that the user wants updated.
 
     // reset the values of the update(FirstName, LastName, Email) variables
     setUpdatedEmail("");
     setUpdatedFirstName("");
     setUpdatedLastName("");
+
     // close modal at the end
     setShowModal(false);
   };
 
   const handleModalClose = () => {
-    console.log("handling close");
     // User did not want to save the changes they were making
     setUpdatedEmail("");
     setUpdatedFirstName("");
@@ -57,9 +101,13 @@ const Profile = () => {
     setShowModal(false);
   };
 
+  const handleErrorAlert = () => {
+    // There was an error so there is a message that is popping up
+    // above the profile section
+    setError("");
+  };
   useEffect(() => {
     userService.getUserProfile(auth, setAuth).then((data) => {
-      console.log(data);
       setFirstName(data.first_name || "");
       setLastName(data.last_name || "");
       setUsername(data.username || "");
@@ -72,6 +120,44 @@ const Profile = () => {
   return (
     <div className="min-h-screen md:h-auto bg-gray-100 px-6 py-8">
       <div className="max-w-xl mx-auto pt-15">
+        {error && (
+          <div className="flex justify-between bg-gray-300 text-red-500 rounded-lg p-3 mb-4 opacity-75">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              fill="none"
+              viewBox="0 0 24 24"
+              strokeWidth={1.5}
+              stroke="currentColor"
+              className="size-6"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                d="M12 9v3.75m-9.303 3.376c-.866 1.5.217 3.374 1.948 3.374h14.71c1.73 0 2.813-1.874 1.948-3.374L13.949 3.378c-.866-1.5-3.032-1.5-3.898 0L2.697 16.126ZM12 15.75h.007v.008H12v-.008Z"
+              />
+            </svg>
+            <span>User profile could not be updated. Please try again.</span>
+            <button
+              className="cursor-pointer hover:bg-gray-400 rounded-full fill-red-500"
+              onClick={handleErrorAlert}
+            >
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                fill="none"
+                viewBox="0 0 24 24"
+                strokeWidth={2}
+                stroke="currentColor"
+                className="size-6"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  d="m9.75 9.75 4.5 4.5m0-4.5-4.5 4.5M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z"
+                />
+              </svg>
+            </button>
+          </div>
+        )}
         <section className="bg-white rounded-2xl p-4 shadow-md">
           <div className="flex justify-between items-center pb-4 mb-4 border-b sm:mb-5">
             <h3 className="text-xl font-semibold text-gray-900">Profile</h3>
