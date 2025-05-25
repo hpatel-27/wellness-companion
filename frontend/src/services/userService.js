@@ -20,4 +20,27 @@ const getUserProfile = async (auth, setAuth) => {
   }
 };
 
-export default { getUserProfile };
+const updateUserProfile = async (auth, setAuth, profileData) => {
+  const response = await authFetch(
+    USER_PROFILE_URL,
+    {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(profileData),
+    },
+    auth,
+    setAuth
+  );
+
+  if (response.ok) {
+    return await response.json();
+  } else {
+    throw new Error(
+      `Error updating the user's profile: ${response.statusText}`
+    );
+  }
+};
+
+export default { getUserProfile, updateUserProfile };
