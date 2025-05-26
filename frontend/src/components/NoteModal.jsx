@@ -177,12 +177,12 @@ const NoteModal = ({ onClose, onSave, onDelete, existingNote = null }) => {
                   viewBox="0 0 24 24"
                   strokeWidth={2}
                   stroke="currentColor"
-                  className="size-4 mr-1.5"
+                  className="size-6 mr-1.5"
                 >
                   <path
                     strokeLinecap="round"
                     strokeLinejoin="round"
-                    d="M12 4.5v15m7.5-7.5h-15"
+                    d="M12 9v6m3-3H9m12 0a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z"
                   />
                 </svg>
 
@@ -192,7 +192,7 @@ const NoteModal = ({ onClose, onSave, onDelete, existingNote = null }) => {
                 <button
                   type="button"
                   onClick={() => onDelete(existingNote?.id)}
-                  className="text-white inline-flex items-center bg-red-500 hover:bg-red-600 transition focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-3 py-2.5 text-center cursor-pointer"
+                  className="text-white inline-flex items-center bg-red-500 hover:bg-red-700 transition focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-3 py-2.5 text-center cursor-pointer"
                 >
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
@@ -200,7 +200,7 @@ const NoteModal = ({ onClose, onSave, onDelete, existingNote = null }) => {
                     viewBox="0 0 24 24"
                     strokeWidth={2}
                     stroke="currentColor"
-                    className="size-4 mr-1.5"
+                    className="size-5 mr-1.5"
                   >
                     <path
                       strokeLinecap="round"
