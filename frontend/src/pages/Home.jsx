@@ -24,7 +24,6 @@ const Home = () => {
       // Take the first five notes to be the recent notes
       setRecentNotes(notes.slice(0, MAX_RECENT_NOTES));
       console.log(notes.slice(0, 5));
-      console.log("HOME RECEIVED: ", data);
     });
   }, [auth, setAuth]);
 
