@@ -7,7 +7,7 @@ const MAX_RECENT_NOTES = 4;
 
 const Home = () => {
   // Don't use journal currently but could be useful
-  const [journal, setJournal] = useState(null);
+  // const [journal, setJournal] = useState(null);
 
   // Up to four most recent notes in widget
   const [recentNotes, setRecentNotes] = useState([]);
