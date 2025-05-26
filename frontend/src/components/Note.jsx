@@ -10,7 +10,7 @@ const Note = ({ note, handleClick }) => {
       <p className="text-sm text-gray-800">
         Last updated: <span>{formatDate(note.updated_at)}</span>
       </p>
-      <p className="text-sm text-gray-600 mt-2 line-clamp-2">{note.content}</p>
+      <p className="text-sm text-gray-600 mt-2 line-clamp-4">{note.content}</p>
       <div className="flex justify-end space-x-3">
         {note?.sleep_score && (
           <p className="bg-blue-400 rounded-2xl text-white p-2 text-xs italic mt-2">
