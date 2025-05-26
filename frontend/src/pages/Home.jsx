@@ -17,7 +17,7 @@ const Home = () => {
 
   useEffect(() => {
     journalService.getJournal(auth, setAuth).then((data) => {
-      setJournal(data);
+      // setJournal(data);
 
       // Sort the notes to get the most recent at the front
       const notes = sortNotes(data?.notes);
